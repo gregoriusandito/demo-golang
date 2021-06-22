@@ -31,11 +31,9 @@ func AccountInquiry(c *gin.Context) {
 	paramAccNumber := c.Params.ByName("accountNumber")
  	accountNumber, _ := strconv.Atoi(paramAccNumber)
 	accountError := dbmap.SelectOne(&AccountDB, "select * from account where account_number = $1", accountNumber)
-    checkErr(accountError, "SelectOne data failed for account")
     log.Println("Account row:", AccountDB)
 
 	customerError := dbmap.SelectOne(&CustomerDB, "select * from customer where customer_number = $1", AccountDB.CustomerNumber)
-    checkErr(customerError, "SelectOne data failed for customer")
     log.Println("Customer row:", CustomerDB)
 
 	if accountError == nil && customerError == nil {
@@ -70,7 +68,6 @@ func TransferBalance(c *gin.Context) {
 	}
 
 	fromAccountError := dbmap.SelectOne(&FromAccountDB, "select * from account where account_number = $1", fromAccountNumber)
-    checkErr(fromAccountError, "SelectOne from account number failed")
     log.Println("From Account row:", FromAccountDB)
 
 	if fromAccountError != nil {
@@ -79,7 +76,6 @@ func TransferBalance(c *gin.Context) {
 	}
 
 	toAccountError := dbmap.SelectOne(&ToAccountDB, "select * from account where account_number = $1", Req.ToAccountNumber)
-    checkErr(toAccountError, "SelectOne benef account number failed")
     log.Println("Benef Account row:", ToAccountDB)
 
 	if toAccountError != nil {
