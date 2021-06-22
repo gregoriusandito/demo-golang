@@ -59,11 +59,16 @@ func TransferBalance(c *gin.Context) {
 	c.Bind(&Req)
 	log.Println(Req.ToAccountNumber == 0)
 
-	if Req.ToAccountNumber == 0 {
-		c.JSON(400, gin.H{"error": "Invalid input"})
+	if Req.ToAccountNumber <= 0 {
+		c.JSON(400, gin.H{"error": "Invalid Source Account"})
 		return
 	}
-	
+
+	if Req.Amount <= 0 {
+		c.JSON(400, gin.H{"error": "Invalid Amount"})
+		return
+	}
+
 	fromAccountError := dbmap.SelectOne(&FromAccountDB, "select * from account where account_number = $1", fromAccountNumber)
     checkErr(fromAccountError, "SelectOne from account number failed")
     log.Println("From Account row:", FromAccountDB)
